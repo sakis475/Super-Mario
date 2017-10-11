@@ -24,16 +24,14 @@ body {
 
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
-			this.load.baseURL = 'https://sakis475.github.io/Super-Mario/';
-			this.load.crossOrigin = 'sakis475';
 
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
 					16);
 			this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
-			this.load.spritesheet('mario', 'assets/mario.png', 16, 16);
-			this.load.spritesheet('coin', 'assets/coin.png', 16, 16);
+			this.load.spritesheet('mario', 'assets/ash.png', 16, 16, 13);
+			this.load.spritesheet('coin', 'assets/coin2.png', 16, 16);
 
-			this.load.tilemap('level', 'assets/super_mario_map.json', null,
+			this.load.tilemap('level', 'assets/super_mario_map1.json', null,
 					Phaser.Tilemap.TILED_JSON);
 		}
 
@@ -59,7 +57,7 @@ body {
 			coins.enableBody = true;
 			map.createFromTiles(2, null, 'coin', 'stuff', coins);
 			coins.callAll('animations.add', 'animations', 'spin',
-					[ 0, 0, 1, 2 ], 3, true);
+					[ 0, 0, 1, 2,3,4,5,6,7 ], 6, true);
 			coins.callAll('animations.play', 'animations', 'spin');
 
 			goombas = game.add.group();
@@ -77,7 +75,7 @@ body {
 			player.body.gravity.y = 370;
 			player.body.collideWorldBounds = true;
 			player.animations.add('walkRight', [ 1, 2, 3 ], 10, true);
-			player.animations.add('walkLeft', [ 8, 9, 10 ], 10, true);
+			player.animations.add('walkLeft', [ 7, 8, 9 ], 10, true);
 			player.goesRight = true;
 
 			game.camera.follow(player);
