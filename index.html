@@ -27,12 +27,12 @@ body {
 			this.load.baseURL = 'https://sakis475.github.io/Super-Mario/';
 			this.load.crossOrigin = 'sakis475';
 			
-			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
-					16);
+			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16, 16);
 			this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
+			
+			//Προσαρμογή των arguments σε καινούργια δεδομένα
 			this.load.spritesheet('mario', 'assets/ash.png', 16, 16, 13);
 			this.load.spritesheet('coin', 'assets/coin2.png', 16, 16);
-
 			this.load.tilemap('level', 'assets/super_mario_map1.json', null,
 					Phaser.Tilemap.TILED_JSON);
 		}
@@ -58,8 +58,12 @@ body {
 			coins = game.add.group();
 			coins.enableBody = true;
 			map.createFromTiles(2, null, 'coin', 'stuff', coins);
+			
+			/*Από coins.callAll(...) [0, 0, 1, 2] σε [ 0, 0, 1, 2, 3, 4, 5, 6, 7 ] 
+			  Αφού το αρχείο coin2 έχει 8 tiles αντί για 3. */
 			coins.callAll('animations.add', 'animations', 'spin',
-					[ 0, 0, 1, 2,3,4,5,6,7 ], 6, true);
+					[ 0, 0, 1, 2, 3, 4, 5, 6, 7 ], 6, true);
+			
 			coins.callAll('animations.play', 'animations', 'spin');
 
 			goombas = game.add.group();
