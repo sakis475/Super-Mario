@@ -115,8 +115,7 @@ body {
 			lostLifeSound = game.add.audio('lostLifeSound');
 			bonusLifeSound = game.add.audio('bonusLifeSound');
 			
-			//ksekinaei na paizei to gameSound apo th arxh
-			gameSound.play();
+			
 			
 			map.createFromTiles(2, null, 'coin', 'stuff', coins);
 			
@@ -155,6 +154,9 @@ body {
 			game.camera.follow(player);
 
 			cursors = game.input.keyboard.createCursorKeys();
+			
+			//ksekinaei na paizei to gameSound apo th arxh
+			gameSound.play();
 		}
 
 		function update() {
