@@ -80,10 +80,11 @@ body {
 			game.stage.backgroundColor = '#5c94fc';
 			
 		
-			//Dhmiourgia scoreText sth ariterh panw gwnia thw othonis
+			//Dhmiourgia scoreText sth ariterh panw gwnia ths othonis
 			scoreText = game.add.text(12, 12, 'score: 0', { fontSize: '12px', fill: '#000' });
 			//To scoreText akoluthaei th camera
 			scoreText.fixedToCamera = true;
+			//Dhmiourgia lifeText sth deksia panw gwnia ths othonis
 			lifeText = game.add.text(200, 12, 'Lives: 3', { fontSize: '12px', fill: '#000' });
 			//To lifeText akoluthaei th camera
 			lifeText.fixedToCamera = true;
@@ -198,6 +199,8 @@ body {
 				if (cursors.up.isDown && player.body.onFloor()) {
 					player.body.velocity.y = -190;
 					player.animations.stop();
+					//otan o paikths pataei to panw 
+					//velaki paizei to jumpSound
 					jumpSound.play();
 					
 					
