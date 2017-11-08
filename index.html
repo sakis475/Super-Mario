@@ -65,6 +65,7 @@ body {
 		//score variable ksekinaei apo 0
 		var score = 0;
 		var scoreText;
+		//Kai life variable ksekinaei apo 3
 		game.life = 3;
 		var lifeText;
 		
@@ -84,7 +85,7 @@ body {
 			//To scoreText akoluthaei th camera
 			scoreText.fixedToCamera = true;
 			lifeText = game.add.text(200, 12, 'Lives: 3', { fontSize: '12px', fill: '#000' });
-			//To scoreText akoluthaei th camera
+			//To lifeText akoluthaei th camera
 			lifeText.fixedToCamera = true;
 		
 			
@@ -244,7 +245,7 @@ body {
 				scoreText.text = 'Score: ' + score;
 				
 				//otan ginete overlap player se goomba
-				//paizei to goombaDeathSound
+				//paizei to lostLifeSound
 				lostLifeSound.play();
 				goomba.animations.stop();
 				goomba.frame = 2;
@@ -267,14 +268,14 @@ body {
 				game.time.events.add(Phaser.Timer.SECOND, function() {
 					goomba.kill();
 				});
+				//meiwsh ths zwhs kata 1
 				game.life--;
 				lifeText.text = 'Lives: ' + game.life;
-				console.log(game.life);
 				
 				//Otan o paikths pethanei stamataei
 				//th mousiki tu paixnidioy
 				//kai paizei auth tu gameover
-			
+				//kai teleiwnei to paixnidi
 				if(game.life == 0) {
 				gameSound.pause();
 				deathSound.play();
