@@ -14,18 +14,31 @@ body {
 </head>
 <body>
 	<script type="text/javascript">
-		var game = new Phaser.Game(256, 240, Phaser.CANVAS, '', {
+		var game = new Phaser.Game(256, 240, Phaser.CANVAS, '', { //game main controller
 			preload : preload,
 			create : create,
 			update : update
 		}, false, false);
+		
+		
 
 		function preload() {
 
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
-			this.load.baseURL = 'https://sakis475.github.io/Super-Mario/';
-			this.load.crossOrigin = 'sakis475';
+		//	this.load.baseURL = 'https://sakis475.github.io/Super-Mario/';
+		//	this.load.crossOrigin = 'sakis475';
+			
+		
+			//Loading olus tus hxus tu paixnidiou
+			game.load.audio('coinSound', 'audio/coin.wav');
+			game.load.audio('jumpSound', 'audio/jump.wav');
+			game.load.audio('deathSound', 'audio/death.wav');
+			game.load.audio('goombaDeathSound', 'audio/stomp.wav');
+			game.load.audio('gameSound', 'audio/game.wav');
+			game.load.audio('lostLifeSound' , 'audio/bump.wav');
+			game.load.audio('bonusLifeSound', 'audio/bonusLife.wav');
+			
 			
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16, 16);
 			this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
@@ -33,31 +46,86 @@ body {
 			//Προσαρμογή των arguments σε καινούργια δεδομένα
 			this.load.spritesheet('mario', 'assets/ash.png', 16, 16, 13);
 			this.load.spritesheet('coin', 'assets/coin2.png', 16, 16);
-			this.load.tilemap('level', 'assets/super_mario_map1.json', null,
+			//loading sprite bonus.png
+			this.load.spritesheet('bonus', 'assets/bonus.png', 16, 16);
+			this.load.tilemap('level', 'assets/super_mario_map2.json', null,
 					Phaser.Tilemap.TILED_JSON);
 		}
-
+		
+		
+		//declaring sounds in variables
+		var coinSound;
+		var jumpSound;
+		var deathSound;
+		var gameSound;
+		var goombaDeathSound;
+		var lostLifeSound;
+		var bonusLifeSound;
+		
+		//score variable ksekinaei apo 0
+		var score = 0;
+		var scoreText;
+		game.life = 3;
+		var lifeText;
+		
 		function create() {
+			
 			Phaser.Canvas.setImageRenderingCrisp(game.canvas)
 			game.scale.pageAlignHorizontally = true;
 			game.scale.pageAlignVertically = true
 			game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 			game.physics.startSystem(Phaser.Physics.ARCADE);
-
+	
 			game.stage.backgroundColor = '#5c94fc';
-
+			
+		
+			//Dhmiourgia scoreText sth ariterh panw gwnia thw othonis
+			scoreText = game.add.text(12, 12, 'score: 0', { fontSize: '12px', fill: '#000' });
+			//To scoreText akoluthaei th camera
+			scoreText.fixedToCamera = true;
+			lifeText = game.add.text(200, 12, 'Lives: 3', { fontSize: '12px', fill: '#000' });
+			//To scoreText akoluthaei th camera
+			lifeText.fixedToCamera = true;
+		
+			
 			map = game.add.tilemap('level');
 			map.addTilesetImage('tiles', 'tiles');
 			map.setCollisionBetween(3, 12, true, 'solid');
 
 			map.createLayer('background');
-
+			
+			
 			layer = map.createLayer('solid');
 			layer.resizeWorld();
 
 			coins = game.add.group();
 			coins.enableBody = true;
+			
+			//vazw to bonus sto group autu tu instance
+			bonus = game.add.group();
+			bonus.enableBody = true;
+			
+			
+			//adding game sounds to the game
+			coinSound = game.add.audio('coinSound');
+			jumpSound = game.add.audio('jumpSound');
+			deathSound = game.add.audio('deathSound');
+			gameSound = game.add.audio('gameSound');
+			goombaDeathSound = game.add.audio('goombaDeathSound');
+			lostLifeSound = game.add.audio('lostLifeSound');
+			bonusLifeSound = game.add.audio('bonusLifeSound');
+			
+			//ksekinaei na paizei to gameSound apo th arxh
+			gameSound.play();
+			
 			map.createFromTiles(2, null, 'coin', 'stuff', coins);
+			
+			//Dhmiourgia bonus tile apo to map data
+			//kai loading sprite 3 opu einai kai to bonus sprite apo
+			//to super_mario_tiles.png
+			map.createFromTiles(3, null, 'bonus', 'stuff', bonus);
+		
+
 			
 			/*Από coins.callAll(...) [0, 0, 1, 2] σε [ 0, 0, 1, 2, 3, 4, 5, 6, 7 ] 
 			  Αφού το αρχείο coin2 έχει 8 tiles αντί για 3. */
@@ -94,7 +162,18 @@ body {
 			game.physics.arcade.collide(goombas, layer);
 			game.physics.arcade.overlap(player, goombas, goombaOverlap);
 			game.physics.arcade.overlap(player, coins, coinOverlap);
-
+			
+			//symperilamvano sta physics to player kai to bonus
+			//kai thn function bonusOverlap gia response se periptwsh overlap
+			game.physics.arcade.overlap(player, bonus, bonusOverlap);
+			
+			//Fernei to scoreText kai to lifeText 
+			//mprosta apo ola ta layers
+			scoreText.bringToTop();
+			lifeText.bringToTop();
+			
+			
+			
 			if (player.body.enable) {
 				player.body.velocity.x = 0;
 				if (cursors.left.isDown) {
@@ -116,7 +195,13 @@ body {
 				if (cursors.up.isDown && player.body.onFloor()) {
 					player.body.velocity.y = -190;
 					player.animations.stop();
+					jumpSound.play();
+					
+					
+					
 				}
+				
+				
 
 				if (player.body.velocity.y != 0) {
 					if (player.goesRight)
@@ -126,27 +211,79 @@ body {
 				}
 			}
 		}
-
+		
+		//Otan player,bonus kanun overlap, kaleite h
+		//Apo katw synarthsh
+		function bonusOverlap(player, bonus) {
+			//paikse to bonusLifeSound
+			bonusLifeSound.play();
+			//Remove bonus sprite
+			bonus.kill();
+			//aukshsh ths zwhs kata 1
+			game.life++;
+			lifeText.text = 'Lives: ' + game.life;
+		}
+		
 		function coinOverlap(player, coin) {
 			coin.kill();
+			//Otan yparxei coinOverlap paizei to coinSound
+			coinSound.play();
+			//kathe fora pu yparxei coinOverlap auksanete to score kata 1
+			score += 1;
+    		scoreText.text = 'Score: ' + score;
 		}
-
+		
 		function goombaOverlap(player, goomba) {
 			if (player.body.touching.down) {
+				
+				//kathe fora pu petheni goomba
+				//dinontai +5 points
+				score += 5;
+				scoreText.text = 'Score: ' + score;
+				
+				//otan ginete overlap player se goomba
+				//paizei to goombaDeathSound
+				lostLifeSound.play();
 				goomba.animations.stop();
 				goomba.frame = 2;
+				
+				
 				goomba.body.enable = false;
 				player.body.velocity.y = -80;
 				game.time.events.add(Phaser.Timer.SECOND, function() {
 					goomba.kill();
 				});
 			} else {
+				//otan ginete overlap player se goomba
+				//paizei to goombaDeathSound
+				goombaDeathSound.play();
+				goomba.animations.stop();
+				goomba.frame = 2;
+				
+				goomba.body.enable = false;
+				player.body.velocity.y = -80;
+				game.time.events.add(Phaser.Timer.SECOND, function() {
+					goomba.kill();
+				});
+				game.life--;
+				lifeText.text = 'Lives: ' + game.life;
+				console.log(game.life);
+				
+				//Otan o paikths pethanei stamataei
+				//th mousiki tu paixnidioy
+				//kai paizei auth tu gameover
+			
+				if(game.life == 0) {
+				gameSound.pause();
+				deathSound.play();
 				player.frame = 6;
 				player.body.enable = false;
+				
 				player.animations.stop();
-				game.time.events.add(Phaser.Timer.SECOND * 3, function() {
-					game.paused = true;
-				});
+					game.time.events.add(Phaser.Timer.SECOND * 3, function() {
+						game.paused = true;
+					});
+				}
 			}
 		}
 	</script>
