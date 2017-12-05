@@ -492,7 +492,7 @@ var loadState = {
 		this.load.audio('bonusLifeSound', 'audio/bonusLife.wav');
 		
 		
-		this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16, 16);
+		this.load.spritesheet('tiles', 'assets/super_mario_tiles2.png', 16, 16);
 		this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
 		this.load.spritesheet('turtle', 'assets/turtle.png', 16, 16);
 		//Προσαρμογή των arguments σε καινούργια δεδομένα
