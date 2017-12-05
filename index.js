@@ -480,7 +480,7 @@ var gameOverState = {
 */
 var loadState = {
 	preload: function() {
-		this.load.spritesheet('button', 'assets/buttons.png', 64, 16);
+		
 	
 		this.load.audio('coinSound', 'audio/coin.wav');
 		this.load.audio('jumpSound', 'audio/jump.wav');
