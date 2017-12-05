@@ -480,7 +480,8 @@ var gameOverState = {
 */
 var loadState = {
 	preload: function() {
-		
+		this.load.baseURL = 'https://sakis475.github.io/Super-Mario/';
+		this.load.crossOrigin = 'sakis475';
 	
 		this.load.audio('coinSound', 'audio/coin.wav');
 		this.load.audio('jumpSound', 'audio/jump.wav');
